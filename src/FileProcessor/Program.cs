@@ -14,7 +14,7 @@ void InitializeFeatures()
 {
     var flags = new Dictionary<string, string>
     {
-        { nameof(FileProcessorFeatures.Convert), "true" },
+        { nameof(FileProcessorFeatures.Convert), "false" },
     };
 
     IConfigurationBuilder builder = new ConfigurationBuilder();
