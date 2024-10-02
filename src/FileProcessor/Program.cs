@@ -1,5 +1,35 @@
-﻿using static System.Console;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.FeatureManagement;
+
+using static System.Console;
 // See https://aka.ms/new-console-template for more information
+
+IFeatureManager FeatureManagerService;
+
+InitializeFeatures();
+
+
+void InitializeFeatures()
+{
+    var flags = new Dictionary<string, string>
+    {
+        { nameof(FileProcessorFeatures.Convert), "true" },
+    };
+
+    IConfigurationBuilder builder = new ConfigurationBuilder();
+    builder.AddInMemoryCollection(flags);
+
+    var configuration = builder.Build();
+
+    IServiceCollection services = new ServiceCollection();
+    services.AddFeatureManagement(configuration);
+
+    var serviceProvider = services.BuildServiceProvider();
+
+    FeatureManagerService = serviceProvider.GetRequiredService<IFeatureManager>();
+
+}
 
 WriteLine("File Processor");
 WriteLine("--------------");
@@ -9,6 +39,12 @@ while (true)
     WriteLine();
     WriteLine("(V)erify Only ");
     WriteLine("(I)mport Into Database ");
+
+    if (await FeatureManagerService.IsEnabledAsync(nameof(FileProcessorFeatures.Convert)))
+    {
+        WriteLine("(C)onvert ");
+    }
+
     WriteLine("(P)rint ");
     WriteLine("(E)xit ");
 
@@ -28,7 +64,10 @@ while (true)
             Print();
             break;
         case "C":
-            Convert();
+            if (await FeatureManagerService.IsEnabledAsync(nameof(FileProcessorFeatures.Convert)))
+            {
+                Convert();
+            }
             break;
         case "E":
             return;
@@ -56,4 +95,10 @@ void Import()
 void Verify()
 {
     WriteLine("Verifying...");
+}
+
+
+enum FileProcessorFeatures
+{
+    Convert
 }
