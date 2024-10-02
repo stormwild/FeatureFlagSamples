@@ -27,12 +27,20 @@ while (true)
         case "P":
             Print();
             break;
+        case "C":
+            Convert();
+            break;
         case "E":
             return;
         default:
             WriteLine("Invalid choice. Please try again.");
             break;
     }
+}
+
+void Convert()
+{
+    throw new NotImplementedException();
 }
 
 void Print()

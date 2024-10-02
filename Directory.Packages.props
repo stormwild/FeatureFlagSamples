@@ -1,7 +1,9 @@
 <Project>
   <!-- See https://aka.ms/dotnet/msbuild/customize for more details on customizing your build -->
   <PropertyGroup>
-
-
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.FeatureManagement" Version="3.5.0" />
+  </ItemGroup>
 </Project>
